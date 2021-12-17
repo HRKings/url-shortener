@@ -49,14 +49,14 @@ func InitializeStore() *StorageService {
 	return storeService
 }
 
-func SaveUrlMapping(shortUrl string, completeUrl string) {
+func SaveUrlMapping(id int, shortUrl string, completeUrl string) {
 	err := storeService.redisClient.Set(ctx, shortUrl, completeUrl, storeService.cacheDuration).Err()
 
 	if err != nil {
 		panic(fmt.Sprintf("Failed saving key url into Redis | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, completeUrl))
 	}
 
-	_, err = storeService.postgresConnection.Exec(ctx, "INSERT INTO urls(short_url, complete_url) VALUES ($1, $2)", shortUrl, completeUrl)
+	_, err = storeService.postgresConnection.Exec(ctx, "INSERT INTO urls(id, short_url, complete_url) VALUES ($1, $2, $3)", id, shortUrl, completeUrl)
 
 	if err != nil {
 		panic(fmt.Sprintf("Failed saving key url into Postgres | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, completeUrl))
@@ -77,13 +77,13 @@ func RetrieveCompleteUrl(shortUrl string) string {
 
 func GetNextId() int {
 	var id int
-	err := storeService.postgresConnection.QueryRow(context.Background(), "SELECT id FROM urls ORDER BY id DESC LIMIT 1").Scan(&id)
+	err := storeService.postgresConnection.QueryRow(context.Background(), "SELECT NEXTVAL(pg_get_serial_sequence('urls', 'id'))").Scan(&id)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to get next ID: %v\n", err)
 	}
 
-	return (id + 1)
+	return id
 }
 
 func UpdateLink(shortUrl string, headers string, sourceIp string) {
