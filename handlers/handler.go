@@ -21,8 +21,9 @@ func CreateShortUrl(context *gin.Context) {
 		return
 	}
 
-	shortUrl := shortener.GenerateShortLink(creationRequest.OriginalUrl, store.GetNextId())
-	store.SaveUrlMapping(shortUrl, creationRequest.OriginalUrl)
+	nextId := store.GetNextId()
+	shortUrl := shortener.GenerateShortLink(creationRequest.OriginalUrl, nextId)
+	store.SaveUrlMapping(nextId, shortUrl, creationRequest.OriginalUrl)
 
 	context.JSON(201, gin.H{
 		"message":   "Short URL created successfully",
