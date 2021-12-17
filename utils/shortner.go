@@ -5,9 +5,9 @@ import (
 )
 
 func GenerateShortLink(initialLink string, sequentialId int) string {
-	hd := hashids.NewData()
-	hd.MinLength = 5
-	h, _ := hashids.NewWithData(hd)
-	e, _ := h.Encode([]int{sequentialId})
-	return e[:5]
+	hashIdsData := hashids.NewData()
+	hashIdsData.MinLength = 5
+	hash, _ := hashids.NewWithData(hashIdsData)
+	encodedHash, _ := hash.Encode([]int{sequentialId})
+	return encodedHash[:5]
 }
