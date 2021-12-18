@@ -8,6 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -19,6 +20,13 @@ func main() {
 	store.InitializeStore()
 
 	server := gin.Default()
+
+	trustp, trustpprovided := os.LookupEnv("TRUSTED_PROXIES")
+
+	if trustpprovided {
+		log.Printf("Trusting proxies: %s", trustp)
+		server.SetTrustedProxies(strings.Split(trustp, ";"))
+	}
 
 	server.POST("/", func(c *gin.Context) {
 		handler.CreateShortUrl(c)
