@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  app:
+    ports:
+      - "8080:5000"
+    env_file:
+      - ".env.docker"
+    environment:
+      GIN_MODE: debug
+      ENV_VARS_PROVIDED: true
+    depends_on:
+      db:
+       condition: service_healthy
+      redis:
+       condition: service_started
+
+  db:
+    image: postgres:14-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: url_shortener
+
+  redis:
+    image: redis:6.2-alpine3.15
+    ports:
+      - "6379"
