@@ -2,18 +2,17 @@ package main
 
 import (
 	"fmt"
-	"log"
-
 	store "github.com/HRKings/url-shortener/data"
 	handler "github.com/HRKings/url-shortener/handlers"
-
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"log"
+	"os"
 )
 
 func main() {
 	err := godotenv.Load()
-	if err != nil {
+	if err != nil && os.Getenv("ENV_VARS_PROVIDED") != "true" {
 		log.Fatal("Error loading .env file")
 	}
 

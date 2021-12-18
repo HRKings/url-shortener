@@ -3,12 +3,11 @@ package store
 import (
 	"context"
 	"fmt"
+	redis "github.com/go-redis/redis/v8"
+	pgx "github.com/jackc/pgx/v4"
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/go-redis/redis/v8"
-	"github.com/jackc/pgx/v4"
 )
 
 var (
