@@ -21,11 +21,11 @@ func main() {
 
 	server := gin.Default()
 
-	trustp, trustpprovided := os.LookupEnv("TRUSTED_PROXIES")
+	trustedProxies, hasTrustedProxies := os.LookupEnv("TRUSTED_PROXIES")
 
-	if trustpprovided {
-		log.Printf("Trusting proxies: %s", trustp)
-		server.SetTrustedProxies(strings.Split(trustp, ";"))
+	if hasTrustedProxies {
+		log.Printf("Trusting proxies: %s", trustedProxies)
+		server.SetTrustedProxies(strings.Split(trustedProxies, ";"))
 	}
 
 	server.POST("/", func(c *gin.Context) {
