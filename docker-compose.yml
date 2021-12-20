@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  app:
+    image: hrkings/url-shortener:${IMG_VERSION-latest}
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      GIN_MODE: release
