@@ -3,11 +3,13 @@ package store
 import (
 	"context"
 	"fmt"
-	redis "github.com/go-redis/redis/v8"
-	pgx "github.com/jackc/pgx/v4"
+	"log"
 	"os"
 	"strconv"
 	"time"
+
+	redis "github.com/go-redis/redis/v8"
+	pgx "github.com/jackc/pgx/v4"
 )
 
 var (
@@ -64,14 +66,15 @@ func SaveUrlMapping(id int, shortUrl string, completeUrl string) {
 	fmt.Printf("Saved short URL: %s - Complete URL: %s\n", shortUrl, completeUrl)
 }
 
-func RetrieveCompleteUrl(shortUrl string) string {
+func RetrieveCompleteUrl(shortUrl string) (string, error) {
 	result, err := storeService.redisClient.Get(ctx, shortUrl).Result()
 
 	if err != nil {
-		panic(fmt.Sprintf("Failed to retrieve complete URL | Error: %v - shortUrl: %s\n", err, shortUrl))
+		log.SetPrefix(fmt.Sprintf("Failed to retrieve complete URL | Error: %v - shortUrl: %s\n", err, shortUrl))
+		return "", err
 	}
 
-	return result
+	return result, nil
 }
 
 func GetNextId() int {

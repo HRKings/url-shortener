@@ -34,9 +34,14 @@ func CreateShortUrl(context *gin.Context) {
 
 func HandleShortUrlRedirect(context *gin.Context) {
 	shortUrl := context.Param("shortUrl")
-	initialUrl := store.RetrieveCompleteUrl(shortUrl)
-	context.Redirect(302, initialUrl)
+	initialUrl, err := store.RetrieveCompleteUrl(shortUrl)
 
+	if err != nil {
+		context.Status(404)
+		return
+	}
+
+	context.Redirect(302, initialUrl)
 	headerBytes, _ := json.Marshal(context.Request.Header)
 	store.UpdateLink(shortUrl, string(headerBytes), context.ClientIP())
 }
