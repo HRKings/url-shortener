@@ -24,7 +24,7 @@ func GetMinLength() int {
 	return minLengthInt
 }
 
-func GenerateShortLink(initialLink string, sequentialId int) string {
+func GenerateShortLink(initialLink string, sequentialId int64) string {
 	hashIdsData := hashids.NewData()
 
 	hashMinLength := GetMinLength()
@@ -32,7 +32,7 @@ func GenerateShortLink(initialLink string, sequentialId int) string {
 	hashIdsData.MinLength = hashMinLength
 
 	hash, _ := hashids.NewWithData(hashIdsData)
-	encodedHash, _ := hash.Encode([]int{sequentialId})
+	encodedHash, _ := hash.EncodeInt64([]int64{sequentialId})
 
 	return encodedHash
 }

@@ -50,7 +50,7 @@ func InitializeStore() *StorageService {
 	return storeService
 }
 
-func SaveUrlMapping(id int, shortUrl string, completeUrl string) {
+func SaveUrlMapping(id int64, shortUrl string, completeUrl string) {
 	err := storeService.redisClient.Set(ctx, shortUrl, completeUrl, storeService.cacheDuration).Err()
 
 	if err != nil {
@@ -77,8 +77,8 @@ func RetrieveCompleteUrl(shortUrl string) (string, error) {
 	return result, nil
 }
 
-func GetNextId() int {
-	var id int
+func GetNextId() int64 {
+	var id int64
 	err := storeService.postgresConnection.QueryRow(context.Background(), "SELECT NEXTVAL(pg_get_serial_sequence('urls', 'id'))").Scan(&id)
 
 	if err != nil {
