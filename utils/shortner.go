@@ -34,5 +34,5 @@ func GenerateShortLink(initialLink string, sequentialId int) string {
 	hash, _ := hashids.NewWithData(hashIdsData)
 	encodedHash, _ := hash.Encode([]int{sequentialId})
 
-	return encodedHash[:hashMinLength]
+	return encodedHash
 }
