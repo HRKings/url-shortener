@@ -1,0 +1,58 @@
+openapi: 3.0.1
+info:
+  title: URL Shortener
+  description: 'A simple URL shortener written in Go with support for Redis caching'
+  version: 1.0.0
+servers:
+- url: localhost
+paths:
+  /:
+    post:
+      summary: Shorten an URL
+      operationId: shortenURL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShortenUrlRequest'
+        required: true
+      responses:
+        201:
+          description: Short URL created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortenUrlResponse'
+  /{short_url_id}:
+    get:
+      summary: Redirect to original URL
+      operationId: redirectURL
+      parameters:
+      - name: short_url_id
+        in: path
+        description: ID of short URL
+        required: true
+        schema:
+          type: string
+      responses:
+        302:
+          description: Redirect to original URL
+        404:
+          description: Short URL not found
+          content: {}
+components:
+  schemas:
+    ShortenUrlRequest:
+      type: object
+      properties:
+        url:
+          type: string
+    ShortenUrlResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Short URL created successfully"
+        short_url:
+          type: string
+          example: "/3kTMd"
