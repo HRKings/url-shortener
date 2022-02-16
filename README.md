@@ -17,3 +17,5 @@ docker-compose -f docker-compose.yml -f docker-compose.run.yml up -d
 # SQL Structure
 
 ![SQL Diagram](assets/sql_diagram.png)
+
+A SQL script to create the tables can be found under the `assets` directory in the root of this repository
