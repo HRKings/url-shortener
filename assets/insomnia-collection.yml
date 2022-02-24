@@ -1,0 +1,205 @@
+_type: export
+__export_format: 4
+__export_date: 2022-02-24T21:25:50.772Z
+__export_source: insomnia.desktop.app:v2021.7.2
+resources:
+  - _id: req_3575839631f44dd2aed7abccd89bb18f
+    parentId: wrk_c18d4a22ad754e3890e7a83cedf0ae79
+    modified: 1645737797954
+    created: 1645731933205
+    url: "{{ _.base_url }}/YLVrL"
+    name: GetUrl
+    description: ""
+    method: GET
+    body:
+      mimeType: application/json
+      text: ""
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_7f5d2f407784416e82605950ee6b586c
+    authentication: {}
+    metaSortKey: -1645730847772
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: wrk_c18d4a22ad754e3890e7a83cedf0ae79
+    parentId: null
+    modified: 1645730836794
+    created: 1645730836794
+    name: Shortener
+    description: ""
+    scope: collection
+    _type: workspace
+  - _id: req_152876072def4630a9f896708e9e14e1
+    parentId: wrk_c18d4a22ad754e3890e7a83cedf0ae79
+    modified: 1645737915717
+    created: 1645730847722
+    url: "{{ _.base_url }}"
+    name: CreateUrl
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"url": "https://github.com/HRKings/url-shortener"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_7f5d2f407784416e82605950ee6b586c
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: prontmed
+      password: Pr0ntm3d@123
+    metaSortKey: -1645730847722
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_91463baff0e94a17913232a111562d5c
+    parentId: wrk_c18d4a22ad754e3890e7a83cedf0ae79
+    modified: 1645737298402
+    created: 1645737215594
+    url: "{{ _.base_url }}/D7MBz"
+    name: ReactivateUrl
+    description: ""
+    method: PUT
+    body:
+      mimeType: application/json
+      text: ""
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_7f5d2f407784416e82605950ee6b586c
+    authentication: {}
+    metaSortKey: -1645730847622
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_0041e2fe386c44f2b1e6d1abcd8749f9
+    parentId: wrk_c18d4a22ad754e3890e7a83cedf0ae79
+    modified: 1645737609460
+    created: 1645737606759
+    url: "{{ _.base_url }}/D7MBz"
+    name: DeactivateUrl
+    description: ""
+    method: DELETE
+    body:
+      mimeType: application/json
+      text: ""
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_7f5d2f407784416e82605950ee6b586c
+    authentication: {}
+    metaSortKey: -1645730847572
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_77ab1dc6e9980ce486c6662549c21b13366feef5
+    parentId: wrk_c18d4a22ad754e3890e7a83cedf0ae79
+    modified: 1645737861788
+    created: 1645730836802
+    name: Base Environment
+    data:
+      base_url: http://localhost:5000
+    dataPropertyOrder:
+      "&":
+        - base_url
+    color: null
+    isPrivate: false
+    metaSortKey: 1645730836802
+    _type: environment
+  - _id: jar_77ab1dc6e9980ce486c6662549c21b13366feef5
+    parentId: wrk_c18d4a22ad754e3890e7a83cedf0ae79
+    modified: 1645737799311
+    created: 1645730836803
+    name: Default Jar
+    cookies:
+      - key: _gh_sess
+        value: aVSXxDHWWy3wWDcx1NrDtL0nGDkcUs2%2BaLMK8ET1z0sQUR3TRgfMQx2k4DG%2FJ%2BlL1s6FSbr%2BG8d8vnoHsN9VSfELnfzSpeHGgfBSNd%2F7wiZjEbx337jF2PMwjyOh04Vkad5Yn97C2PiakwpdsdiJy%2BMu9JpDqa75zlmd8hSHY6i1tYmDLVBnbdMBEs2rVysHdaR0A%2Fnmcsq9LBzMARtDPSHCwtGLFI1m0PdX34b%2F6Sh2Pw7cYYeDOaOWIiJXxfF%2FIODHAmpIvran7ZBOeORlPw%3D%3D--ZkDlFRV5tiMM5AOK--q3Unk7w3MYMNHB%2FMf7NFXA%3D%3D
+        domain: github.com
+        path: /
+        secure: true
+        httpOnly: true
+        extensions:
+          - SameSite=Lax
+        hostOnly: true
+        creation: 2022-02-24T21:23:19.310Z
+        lastAccessed: 2022-02-24T21:23:19.310Z
+        id: "5130742720237047"
+      - key: _octo
+        value: GH1.1.362327433.1645737798
+        expires: 2023-02-24T21:23:18.000Z
+        domain: github.com
+        path: /
+        secure: true
+        extensions:
+          - SameSite=Lax
+        hostOnly: false
+        creation: 2022-02-24T21:23:19.311Z
+        lastAccessed: 2022-02-24T21:23:19.311Z
+        id: "8308307854604138"
+      - key: logged_in
+        value: no
+        expires: 2023-02-24T21:23:18.000Z
+        domain: github.com
+        path: /
+        secure: true
+        httpOnly: true
+        extensions:
+          - SameSite=Lax
+        hostOnly: false
+        creation: 2022-02-24T21:23:19.311Z
+        lastAccessed: 2022-02-24T21:23:19.311Z
+        id: "6017409329690238"
+    _type: cookie_jar
+  - _id: spc_825189e109ca4f1ab4bd602e3c6ca68d
+    parentId: wrk_c18d4a22ad754e3890e7a83cedf0ae79
+    modified: 1645730836797
+    created: 1645730836797
+    fileName: Shortener
+    contents: ""
+    contentType: yaml
+    _type: api_spec
+  - _id: env_a9a69ae28b1a47c1a1c220dbc0c9511d
+    parentId: env_77ab1dc6e9980ce486c6662549c21b13366feef5
+    modified: 1645737888450
+    created: 1645736599346
+    name: Development
+    data:
+      base_url: http://localhost:5000
+    dataPropertyOrder:
+      "&":
+        - base_url
+    color: null
+    isPrivate: false
+    metaSortKey: 1
+    _type: environment
