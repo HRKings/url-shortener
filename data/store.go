@@ -62,13 +62,14 @@ func SaveUrlMapping(id int64, shortUrl string, completeUrl string) {
 	fmt.Printf("Saved short URL: %s - Complete URL: %s\n", shortUrl, completeUrl)
 }
 
-func ReactivateUrl(shortUrl string) {
+func ReactivateUrl(shortUrl string) error {
 	var completeUrl string
-	err := storeService.postgresConnection.QueryRow(context.Background(), "SELECT complete_url FROM urls").Scan(&completeUrl)
-	if err != nil {
-		panic(fmt.Sprintf("Failed getting completed_url from SQL | Error: %v - shortUrl: %s\n", err, shortUrl))
+	err := storeService.postgresConnection.QueryRow(context.Background(), "SELECT complete_url FROM urls where short_url = $1", shortUrl).Scan(&completeUrl)
+	if err != nil || completeUrl == "" {
+		return fmt.Errorf("Failed getting completed_url from SQL | Error: %v - shortUrl: %s\n", err, shortUrl)
 	}
 	AddUrlToCache(shortUrl, completeUrl)
+	return nil
 }
 
 func DeactivateUrl(shortUrl string) {

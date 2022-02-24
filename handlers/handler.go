@@ -48,7 +48,10 @@ func HandleShortUrlRedirect(context *gin.Context) {
 
 func ReactivateShortUrl(context *gin.Context) {
 	shortUrl := context.Param("shortUrl")
-	store.ReactivateUrl(shortUrl)
+	err := store.ReactivateUrl(shortUrl)
+	if err != nil {
+		context.AbortWithError(400, err)
+	}
 }
 
 func DeactivateShortUrl(context *gin.Context) {
