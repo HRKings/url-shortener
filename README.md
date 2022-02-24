@@ -24,9 +24,24 @@ The service only has two endpoints:
 
 Used to shorten an URL, accepts a JSON body containing a `url` property with the URL to be shortened
 
-## GET `/:short_url_id`
+Example:
+```json
+{
+  "url": "https://github.com/HRKings/url-shortener"
+}
+```
+
+## GET `/:short_url`
 
 Redirects the user to the original URL
+
+## PUT `/:short_url`
+
+Add the shortUrl into REDIS (will redirect again)
+
+## DELETE `/:short_url`
+
+Remove the shortUrl from REDIS (will not redirect anymore)
 
 # SQL Structure
 
