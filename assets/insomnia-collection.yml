@@ -56,12 +56,6 @@ resources:
       - name: Content-Type
         value: application/json
         id: pair_7f5d2f407784416e82605950ee6b586c
-    authentication:
-      type: basic
-      useISO88591: false
-      disabled: false
-      username: prontmed
-      password: Pr0ntm3d@123
     metaSortKey: -1645730847722
     isPrivate: false
     settingStoreCookies: true
