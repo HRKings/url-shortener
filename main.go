@@ -32,6 +32,13 @@ func main() {
 		handler.CreateShortUrl(c)
 	})
 
+	server.PUT("/:shortUrl", func(c *gin.Context) {
+		handler.ReactivateShortUrl(c)
+	})
+	server.DELETE("/:shortUrl", func(c *gin.Context) {
+		handler.DeactivateShortUrl(c)
+	})
+
 	server.GET("/:shortUrl", func(c *gin.Context) {
 		handler.HandleShortUrlRedirect(c)
 	})

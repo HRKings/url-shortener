@@ -51,19 +51,38 @@ func InitializeStore() *StorageService {
 }
 
 func SaveUrlMapping(id int64, shortUrl string, completeUrl string) {
-	err := storeService.redisClient.Set(ctx, shortUrl, completeUrl, storeService.cacheDuration).Err()
+	AddUrlToCache(shortUrl, completeUrl)
 
-	if err != nil {
-		panic(fmt.Sprintf("Failed saving key url into Redis | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, completeUrl))
-	}
-
-	_, err = storeService.postgresConnection.Exec(ctx, "INSERT INTO urls(id, short_url, complete_url) VALUES ($1, $2, $3)", id, shortUrl, completeUrl)
+	_, err := storeService.postgresConnection.Exec(ctx, "INSERT INTO urls(id, short_url, complete_url) VALUES ($1, $2, $3)", id, shortUrl, completeUrl)
 
 	if err != nil {
 		panic(fmt.Sprintf("Failed saving key url into Postgres | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, completeUrl))
 	}
 
 	fmt.Printf("Saved short URL: %s - Complete URL: %s\n", shortUrl, completeUrl)
+}
+
+func ReactivateUrl(shortUrl string) {
+	var completeUrl string
+	err := storeService.postgresConnection.QueryRow(context.Background(), "SELECT complete_url FROM urls").Scan(&completeUrl)
+	if err != nil {
+		panic(fmt.Sprintf("Failed getting completed_url from SQL | Error: %v - shortUrl: %s\n", err, shortUrl))
+	}
+	AddUrlToCache(shortUrl, completeUrl)
+}
+
+func DeactivateUrl(shortUrl string) {
+	err := storeService.redisClient.Del(ctx, shortUrl).Err()
+	if err != nil {
+		panic(fmt.Sprintf("Failed deleting key url into Redis | Error: %v - shortUrl: %s\n", err, shortUrl))
+	}
+}
+
+func AddUrlToCache(shortUrl string, completeUrl string) {
+	err := storeService.redisClient.Set(ctx, shortUrl, completeUrl, storeService.cacheDuration).Err()
+	if err != nil {
+		panic(fmt.Sprintf("Failed saving key url into Redis | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, completeUrl))
+	}
 }
 
 func RetrieveCompleteUrl(shortUrl string) (string, error) {

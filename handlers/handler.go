@@ -45,3 +45,13 @@ func HandleShortUrlRedirect(context *gin.Context) {
 	headerBytes, _ := json.Marshal(context.Request.Header)
 	store.UpdateLink(shortUrl, string(headerBytes), context.ClientIP())
 }
+
+func ReactivateShortUrl(context *gin.Context) {
+	shortUrl := context.Param("shortUrl")
+	store.ReactivateUrl(shortUrl)
+}
+
+func DeactivateShortUrl(context *gin.Context) {
+	shortUrl := context.Param("shortUrl")
+	store.DeactivateUrl(shortUrl)
+}
