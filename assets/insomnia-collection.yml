@@ -142,44 +142,6 @@ resources:
     modified: 1645737799311
     created: 1645730836803
     name: Default Jar
-    cookies:
-      - key: _gh_sess
-        value: aVSXxDHWWy3wWDcx1NrDtL0nGDkcUs2%2BaLMK8ET1z0sQUR3TRgfMQx2k4DG%2FJ%2BlL1s6FSbr%2BG8d8vnoHsN9VSfELnfzSpeHGgfBSNd%2F7wiZjEbx337jF2PMwjyOh04Vkad5Yn97C2PiakwpdsdiJy%2BMu9JpDqa75zlmd8hSHY6i1tYmDLVBnbdMBEs2rVysHdaR0A%2Fnmcsq9LBzMARtDPSHCwtGLFI1m0PdX34b%2F6Sh2Pw7cYYeDOaOWIiJXxfF%2FIODHAmpIvran7ZBOeORlPw%3D%3D--ZkDlFRV5tiMM5AOK--q3Unk7w3MYMNHB%2FMf7NFXA%3D%3D
-        domain: github.com
-        path: /
-        secure: true
-        httpOnly: true
-        extensions:
-          - SameSite=Lax
-        hostOnly: true
-        creation: 2022-02-24T21:23:19.310Z
-        lastAccessed: 2022-02-24T21:23:19.310Z
-        id: "5130742720237047"
-      - key: _octo
-        value: GH1.1.362327433.1645737798
-        expires: 2023-02-24T21:23:18.000Z
-        domain: github.com
-        path: /
-        secure: true
-        extensions:
-          - SameSite=Lax
-        hostOnly: false
-        creation: 2022-02-24T21:23:19.311Z
-        lastAccessed: 2022-02-24T21:23:19.311Z
-        id: "8308307854604138"
-      - key: logged_in
-        value: no
-        expires: 2023-02-24T21:23:18.000Z
-        domain: github.com
-        path: /
-        secure: true
-        httpOnly: true
-        extensions:
-          - SameSite=Lax
-        hostOnly: false
-        creation: 2022-02-24T21:23:19.311Z
-        lastAccessed: 2022-02-24T21:23:19.311Z
-        id: "6017409329690238"
     _type: cookie_jar
   - _id: spc_825189e109ca4f1ab4bd602e3c6ca68d
     parentId: wrk_c18d4a22ad754e3890e7a83cedf0ae79
