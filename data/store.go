@@ -53,8 +53,8 @@ func InitializeStore() *StorageService {
 	return storeService
 }
 
-func SaveUrlMapping(id int64, shortUrl string, completeUrl string) {
-	AddUrlToCache(shortUrl, completeUrl)
+func SaveUrlMapping(id int64, shortUrl string, completeUrl string, ttl string) {
+	AddUrlToCache(shortUrl, completeUrl, ttl)
 
 	_, err := storeService.postgresConnection.Exec(ctx, "INSERT INTO urls(id, short_url, complete_url) VALUES ($1, $2, $3)", id, shortUrl, completeUrl)
 
@@ -65,13 +65,13 @@ func SaveUrlMapping(id int64, shortUrl string, completeUrl string) {
 	fmt.Printf("Saved short URL: %s - Complete URL: %s\n", shortUrl, completeUrl)
 }
 
-func ReactivateUrl(shortUrl string) error {
+func ReactivateUrl(shortUrl string, ttl string) error {
 	var completeUrl string
 	err := storeService.postgresConnection.QueryRow(context.Background(), "SELECT complete_url FROM urls where short_url = $1", shortUrl).Scan(&completeUrl)
 	if err != nil || completeUrl == "" {
 		return fmt.Errorf("Failed getting completed_url from SQL | Error: %v - shortUrl: %s\n", err, shortUrl)
 	}
-	AddUrlToCache(shortUrl, completeUrl)
+	AddUrlToCache(shortUrl, completeUrl, ttl)
 	return nil
 }
 
@@ -82,8 +82,18 @@ func DeactivateUrl(shortUrl string) {
 	}
 }
 
-func AddUrlToCache(shortUrl string, completeUrl string) {
-	err := storeService.redisClient.Set(ctx, shortUrl, completeUrl, storeService.cacheDuration).Err()
+func AddUrlToCache(shortUrl string, completeUrl string, ttl string) {
+	secondsTTL := storeService.cacheDuration
+	if ttl != "NA" {
+		tmp, err := strconv.Atoi(ttl)
+		if err != nil {
+			panic(fmt.Sprintf("Failed parsing short URL TTL | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, completeUrl))
+		}
+
+		secondsTTL = time.Duration(tmp * 3600000000000) // Convert 1h to nanoseconds
+	}
+
+	err := storeService.redisClient.Set(ctx, shortUrl, completeUrl, secondsTTL).Err()
 	if err != nil {
 		panic(fmt.Sprintf("Failed saving key url into Redis | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, completeUrl))
 	}
