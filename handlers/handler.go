@@ -12,10 +12,14 @@ import (
 
 type UrlCreationRequest struct {
 	OriginalUrl string `json:"url" binding:"required"`
+	Ttl         string  `json:"ttl"`
 }
 
 func CreateShortUrl(context *gin.Context) {
-	var creationRequest UrlCreationRequest
+	creationRequest := UrlCreationRequest{
+		OriginalUrl: "",
+		Ttl: "NA",
+	}
 	if err := context.ShouldBindJSON(&creationRequest); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -23,7 +27,7 @@ func CreateShortUrl(context *gin.Context) {
 
 	nextId := store.GetNextId()
 	shortUrl := shortener.GenerateShortLink(creationRequest.OriginalUrl, nextId)
-	store.SaveUrlMapping(nextId, shortUrl, creationRequest.OriginalUrl)
+	store.SaveUrlMapping(nextId, shortUrl, creationRequest.OriginalUrl, creationRequest.Ttl)
 
 	context.JSON(201, gin.H{
 		"message":   "Short URL created successfully",
@@ -48,7 +52,8 @@ func HandleShortUrlRedirect(context *gin.Context) {
 
 func ReactivateShortUrl(context *gin.Context) {
 	shortUrl := context.Param("shortUrl")
-	err := store.ReactivateUrl(shortUrl)
+	ttl := context.DefaultQuery("ttl", "NA")
+	err := store.ReactivateUrl(shortUrl, ttl)
 	if err != nil {
 		context.AbortWithError(400, err)
 	}
