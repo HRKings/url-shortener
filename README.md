@@ -27,7 +27,8 @@ Used to shorten an URL, accepts a JSON body containing a `url` property with the
 Example:
 ```json
 {
-  "url": "https://github.com/HRKings/url-shortener"
+  "url": "https://github.com/HRKings/url-shortener",
+  "ttl": "72" // (Optional) TTL in hours of the link
 }
 ```
 
@@ -38,6 +39,10 @@ Redirects the user to the original URL
 ## PUT `/:short_url`
 
 Add the shortUrl into REDIS (will redirect again)
+
+### PUT `/:short_url?ttl=EXPIRATION_IN_HOURS`
+
+Optionally the query param `ttl` can be sent to set the cache expiration of this link
 
 ## DELETE `/:short_url`
 
