@@ -12,5 +12,5 @@ CREATE TABLE clicks (
     clicked_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     source_ip TEXT,
     CONSTRAINT fk_short_url
-        FOREIGN KEY(short_url) REFERENCES url(short_url)
+        FOREIGN KEY(short_url) REFERENCES urls(short_url)
 );
