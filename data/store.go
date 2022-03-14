@@ -41,11 +41,14 @@ func InitializeStore() *StorageService {
 		panic(fmt.Sprintf("Error initializing Redis: %v", err))
 	}
 
-	cacheDuration, _ := strconv.Atoi(os.Getenv("REDIS_CACHE"))
+	cacheDuration, err := strconv.Atoi(os.Getenv("REDIS_CACHE"))
+	if err != nil {
+		panic(fmt.Sprintf("Failed parsing default TTL | Error: %v", err))
+	}
 
 	storeService.redisClient = redisClient
 	storeService.postgresConnection = postregsConnection
-	storeService.cacheDuration = time.Duration(cacheDuration)
+	storeService.cacheDuration = time.Duration(cacheDuration * 3600000000000)
 
 	return storeService
 }
