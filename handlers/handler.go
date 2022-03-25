@@ -12,6 +12,7 @@ import (
 
 type UrlCreationRequest struct {
 	OriginalUrl string `json:"url" binding:"required"`
+	FallbackUrl string `json:"fallback"`
 	Ttl         string  `json:"ttl"`
 }
 
@@ -27,7 +28,7 @@ func CreateShortUrl(context *gin.Context) {
 
 	nextId := store.GetNextId()
 	shortUrl := shortener.GenerateShortLink(creationRequest.OriginalUrl, nextId)
-	store.SaveUrlMapping(nextId, shortUrl, creationRequest.OriginalUrl, creationRequest.Ttl)
+	store.SaveUrlMapping(nextId, shortUrl, creationRequest.OriginalUrl, creationRequest.FallbackUrl, creationRequest.Ttl)
 
 	context.JSON(201, gin.H{
 		"message":   "Short URL created successfully",
@@ -41,11 +42,20 @@ func HandleShortUrlRedirect(context *gin.Context) {
 	initialUrl, err := store.RetrieveCompleteUrl(shortUrl)
 
 	if err != nil {
-		context.Status(404)
+		fallbackUrl, err := store.RetrieveFallbackUrl(shortUrl)
+
+		if err != nil {
+			context.Status(404)
+		} else {
+			context.Redirect(302, fallbackUrl)
+		}
+
 		return
+	} else {
+		context.Redirect(302, initialUrl)
 	}
 
-	context.Redirect(302, initialUrl)
+
 	headerBytes, _ := json.Marshal(context.Request.Header)
 	store.UpdateLink(shortUrl, string(headerBytes), context.ClientIP())
 }

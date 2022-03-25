@@ -53,10 +53,10 @@ func InitializeStore() *StorageService {
 	return storeService
 }
 
-func SaveUrlMapping(id int64, shortUrl string, completeUrl string, ttl string) {
+func SaveUrlMapping(id int64, shortUrl string, completeUrl string, fallBackUrl string, ttl string) {
 	AddUrlToCache(shortUrl, completeUrl, ttl)
 
-	_, err := storeService.postgresConnection.Exec(ctx, "INSERT INTO urls(id, short_url, complete_url) VALUES ($1, $2, $3)", id, shortUrl, completeUrl)
+	_, err := storeService.postgresConnection.Exec(ctx, "INSERT INTO urls(id, short_url, complete_url) VALUES ($1, $2, $3, $4)", id, shortUrl, completeUrl, fallBackUrl)
 
 	if err != nil {
 		panic(fmt.Sprintf("Failed saving key url into Postgres | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, completeUrl))
@@ -108,6 +108,16 @@ func RetrieveCompleteUrl(shortUrl string) (string, error) {
 	}
 
 	return result, nil
+}
+
+func RetrieveFallbackUrl(shortUrl string) (string, error) {
+	var fallbackUrl string
+	err := storeService.postgresConnection.QueryRow(context.Background(), "SELECT fallback_url FROM urls where short_url = $1", shortUrl).Scan(&fallbackUrl)
+	if err != nil || fallbackUrl == "" {
+		return "", fmt.Errorf("Failed getting fallback_url from SQL | Error: %v - shortUrl: %s\n", err, shortUrl)
+	}
+
+	return fallbackUrl, nil
 }
 
 func GetNextId() int64 {
