@@ -28,6 +28,7 @@ Example:
 ```json
 {
   "url": "https://github.com/HRKings/url-shortener",
+  "fallback": "https://example.com", // (Optional) Optional fallback URL for when the short link expires
   "ttl": "72" // (Optional) TTL in hours of the link
 }
 ```
