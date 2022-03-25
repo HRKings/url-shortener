@@ -2,6 +2,7 @@ CREATE TABLE urls (
     id SERIAL PRIMARY KEY,
     short_url TEXT UNIQUE NOT NULL,
     complete_url TEXT NOT NULL,
+    fallback_url TEXT,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
