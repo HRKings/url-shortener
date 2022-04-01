@@ -9,7 +9,7 @@ import (
 	"time"
 
 	redis "github.com/go-redis/redis/v8"
-	pgx "github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 var (
@@ -19,12 +19,12 @@ var (
 
 type StorageService struct {
 	redisClient        *redis.Client
-	postgresConnection *pgx.Conn
+	postgresConnection *pgxpool.Pool
 	cacheDuration      time.Duration
 }
 
 func InitializeStore() *StorageService {
-	postregsConnection, err := pgx.Connect(context.Background(), os.Getenv("POSTGRES_CONN_STRING"))
+	postgresConnection, err := pgxpool.Connect(context.Background(), os.Getenv("POSTGRES_CONN_STRING"))
 	if err != nil {
 		panic(fmt.Sprintf("Error initializing PostgreSQL: %v", err))
 	}
@@ -47,7 +47,7 @@ func InitializeStore() *StorageService {
 	}
 
 	storeService.redisClient = redisClient
-	storeService.postgresConnection = postregsConnection
+	storeService.postgresConnection = postgresConnection
 	storeService.cacheDuration = time.Duration(cacheDuration * 3600000000000)
 
 	return storeService
@@ -56,7 +56,7 @@ func InitializeStore() *StorageService {
 func SaveUrlMapping(id int64, shortUrl string, completeUrl string, fallBackUrl string, ttl string) {
 	AddUrlToCache(shortUrl, completeUrl, ttl)
 
-	_, err := storeService.postgresConnection.Exec(ctx, "INSERT INTO urls(id, short_url, complete_url) VALUES ($1, $2, $3, $4)", id, shortUrl, completeUrl, fallBackUrl)
+	_, err := storeService.postgresConnection.Exec(ctx, "INSERT INTO urls(id, short_url, complete_url, fallback_url) VALUES ($1, $2, $3, $4)", id, shortUrl, completeUrl, fallBackUrl)
 
 	if err != nil {
 		panic(fmt.Sprintf("Failed saving key url into Postgres | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, completeUrl))
