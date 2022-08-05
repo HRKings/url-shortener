@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   app:
+    build: .
     ports:
       - "8080:5000"
     env_file:
@@ -22,6 +23,8 @@ services:
       interval: 3s
       timeout: 5s
       retries: 5
+    ports:
+      - "5433:5432"
     environment:
       POSTGRES_PASSWORD: postgres123
       POSTGRES_DB: url_shortener
