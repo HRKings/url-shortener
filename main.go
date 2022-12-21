@@ -4,6 +4,7 @@ import (
 	"fmt"
 	store "github.com/HRKings/url-shortener/data"
 	handler "github.com/HRKings/url-shortener/handlers"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"log"
@@ -20,6 +21,9 @@ func main() {
 	store.InitializeStore()
 
 	server := gin.Default()
+
+	// Enable Allow All CORS
+	server.Use(cors.Default())
 
 	trustedProxies, hasTrustedProxies := os.LookupEnv("TRUSTED_PROXIES")
 
