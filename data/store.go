@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	shortener "github.com/HRKings/url-shortener/utils"
+
 	redis "github.com/go-redis/redis/v8"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -76,9 +78,11 @@ func ReactivateUrl(shortUrl string, ttl string) error {
 }
 
 func DeactivateUrl(shortUrl string) {
-	err := storeService.redisClient.Del(ctx, shortUrl).Err()
+	redisKey := shortener.GetRedisKey(shortUrl)
+
+	err := storeService.redisClient.Del(ctx, redisKey).Err()
 	if err != nil {
-		panic(fmt.Sprintf("Failed deleting key url into Redis | Error: %v - shortUrl: %s\n", err, shortUrl))
+		panic(fmt.Sprintf("Failed deleting key URL into Redis | Error: %v - shortUrl: %s\n", err, redisKey))
 	}
 }
 
@@ -93,17 +97,19 @@ func AddUrlToCache(shortUrl string, completeUrl string, ttl string) {
 		secondsTTL = time.Duration(tmp * 3600000000000) // Convert 1h to nanoseconds
 	}
 
-	err := storeService.redisClient.Set(ctx, shortUrl, completeUrl, secondsTTL).Err()
+	redisKey := shortener.GetRedisKey(shortUrl)
+	err := storeService.redisClient.Set(ctx, redisKey, completeUrl, secondsTTL).Err()
 	if err != nil {
-		panic(fmt.Sprintf("Failed saving key url into Redis | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, completeUrl))
+		panic(fmt.Sprintf("Failed saving key url into Redis | Error: %v - shortUrl: %s - originalUrl: %s\n", err, redisKey, completeUrl))
 	}
 }
 
 func RetrieveCompleteUrl(shortUrl string) (string, error) {
-	result, err := storeService.redisClient.Get(ctx, shortUrl).Result()
+	redisKey := shortener.GetRedisKey(shortUrl)
+	result, err := storeService.redisClient.Get(ctx, redisKey).Result()
 
 	if err != nil {
-		log.SetPrefix(fmt.Sprintf("Failed to retrieve complete URL | Error: %v - shortUrl: %s\n", err, shortUrl))
+		log.SetPrefix(fmt.Sprintf("Failed to retrieve complete URL from Redis | Error: %v - shortUrl: %s\n", err, redisKey))
 		return "", err
 	}
 

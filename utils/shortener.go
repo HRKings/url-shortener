@@ -1,6 +1,7 @@
 package shortener
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 
@@ -35,4 +36,14 @@ func GenerateShortLink(initialLink string, sequentialId int64) string {
 	encodedHash, _ := hash.EncodeInt64([]int64{sequentialId})
 
 	return encodedHash
+}
+
+func GetRedisKey(shortUrl string) string {
+	redisKeyPrefix := os.Getenv("REDIS_KEY_PREFIX")
+
+	if redisKeyPrefix == "" {
+		redisKeyPrefix = "url-shortener"
+	}
+
+	return fmt.Sprintf("%s:%s", redisKeyPrefix, shortUrl)
 }
